@@ -3,11 +3,13 @@ package package1;
  * Реализация класса контейнер, позволяющего хранить произвольное количество объектов, с помощью массива.
  * Без использование встроенных коллекций. Контейнер позволяет добавлять, извлекать, удалять элементы.
  * @author Осипова Валерия
- * @version 1.1
+ * @version 1.2
  */
 public class Container {
+
+    private
     /** Поле начального размера массива */
-    private final int init_size = 10;
+    final int init_size = 1;
     /** Поле указатель (текущий размер массива) */
     int current;
     /** Поле контейнер */
@@ -36,8 +38,7 @@ public class Container {
      * @param data - данные
      */
     void push(int data){
-        if (current == NewContainer.length - 1)
-            resize(NewContainer.length * 2);
+        resize();
         NewContainer[current] = data;
         current++;
     }
@@ -53,11 +54,10 @@ public class Container {
      * Процедура удаления элемента контейнера {@link  Container#current}
      */
     void remove(int index){
-        for (int i = index; i < current; i++)
+        for (int i = index; i < current - 1; i++)
             NewContainer[i] = NewContainer[i + 1];
         current--;
-        if(current < NewContainer.length/2)
-            resize(NewContainer.length/2);
+        resize();
     }
     /**
      * Процедура очистки контейнера
@@ -76,20 +76,28 @@ public class Container {
     /**
      * Процедура увеличения размера контейнера
      */
-    void resize(int new_length){
-        int[] tmpNewContainer = new int[new_length];
-        for (int i = 0; i < current; i++)
-            tmpNewContainer[i] = NewContainer[i];
-        NewContainer = null;
-        NewContainer = tmpNewContainer;
+    void resize(){
+        int new_length = NewContainer.length;
+        if (current == NewContainer.length - 1)
+            new_length = NewContainer.length * 2;
+        if (current + 1 < NewContainer.length / 2)
+            new_length = NewContainer.length / 2;
+        if (new_length != NewContainer.length){
+            int[] tmpNewContainer = new int[new_length];
+            for (int i = 0; i < current; i++)
+                tmpNewContainer[i] = NewContainer[i];
+            NewContainer = null;
+            NewContainer = tmpNewContainer;
+        }
     }
     /**
-     * Процедура вывода контейнера
+     * Функция вывода контейнера
+     * @return возвращает в виде строки содержиоме контейнера
      */
-    void print()
-    {
+    String to_string(){
+        String str = "";
         for (int i = 0; i < current; i++)
-            System.out.print(NewContainer[i] + " ");
-        System.out.print('\n');
+            str += NewContainer[i] + " ";
+        return str;
     }
 }
